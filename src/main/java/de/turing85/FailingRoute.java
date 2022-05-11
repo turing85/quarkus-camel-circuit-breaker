@@ -3,7 +3,6 @@ package de.turing85;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.*;
 
 import javax.enterprise.context.*;
-import javax.inject.*;
 import org.apache.camel.*;
 import org.apache.camel.builder.*;
 
@@ -27,7 +26,7 @@ public class FailingRoute extends RouteBuilder {
             .log("Before circuit breaker: ${body}")
             .process(this::transform)
             .log("After circuit breaker: ${body}")
-        .endCircuitBreaker()
+        .end()
         .log("After processing: ${body}");
     // @formatter: on
   }
