@@ -16,7 +16,7 @@ public class FailingRoute extends RouteBuilder {
     from(timer("foo").period(100).repeatCount(120))
         .routeId("failing-route")
         .process(this::generate)
-        .log("Generated: ${body}")
+        .log("START Generated: ${body}")
         .circuitBreaker()
             .faultToleranceConfiguration()
                 .requestVolumeThreshold(10)
@@ -26,8 +26,10 @@ public class FailingRoute extends RouteBuilder {
             .log("Before circuit breaker: ${body}")
             .process(this::maybeFail)
             .log("After circuit breaker: ${body}")
+            .onFallback()
+                .log("END exceptionally: ${body}")
         .end()
-        .log("After processing: ${body}");
+        .log("END After processing: ${body}");
     // @formatter: on
   }
 
