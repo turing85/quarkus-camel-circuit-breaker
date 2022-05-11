@@ -24,7 +24,7 @@ public class FailingRoute extends RouteBuilder {
                 .delay(2000)
             .end()
             .log("Before circuit breaker: ${body}")
-            .process(this::transform)
+            .process(this::maybeFail)
             .log("After circuit breaker: ${body}")
         .end()
         .log("After processing: ${body}");
@@ -35,9 +35,8 @@ public class FailingRoute extends RouteBuilder {
     exchange.getIn().setBody(counter++);
   }
 
-  private void transform(Exchange exchange) {
-    int value = exchange.getIn().getBody(Integer.class);
-    if (value < 100) {
+  private void maybeFail(Exchange exchange) {
+    if (exchange.getIn().getBody(Integer.class) < 100) {
       throw new RuntimeException();
     }
   }
